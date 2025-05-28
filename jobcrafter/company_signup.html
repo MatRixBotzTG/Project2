@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Company Sign Up - Job Board Platform</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/price_rangs.css">
+    <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Custom styles for your form to blend with the template */
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 150px);
+            background-color: #f4f4f4;
+            padding: 50px 0;
+        }
+        .signup-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px; /* Wider for map */
+        }
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        #map {
+            height: 250px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .btn-custom-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom-submit:hover {
+            background-color: #218838;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <?php include 'header.html'; ?>
+
+    <main>
+        <div class="form-container">
+            <div class="signup-container">
+                <h2>Company Sign Up</h2>
+                <?php
+                session_start();
+                if (isset($_SESSION['error_messages'])) {
+                    echo '<div class="alert alert-danger">';
+                    foreach ($_SESSION['error_messages'] as $error) {
+                        echo htmlspecialchars($error) . '<br>';
+                    }
+                    echo '</div>';
+                    unset($_SESSION['error_messages']);
+                }
+                ?>
+                <form action="php/company_register.php" method="POST">
+                    <div class="form-group">
+                        <label for="company_name">Company Name:</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company_mail">Company Email:</label>
+                        <input type="email" id="company_mail" name="company_mail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company_number">Company Phone Number:</label>
+                        <input type="text" id="company_number" name="company_number" class="form-control" pattern="[0-9]{10}" title="Please enter a 10-digit phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company_country">Country:</label>
+                        <input type="text" id="company_country" name="company_country" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company_state">State:</label>
+                        <input type="text" id="company_state" name="company_state" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Location (Click on map):</label>
+                        <div id="map"></div>
+                        <input type="hidden" id="location_lat" name="location_lat" required>
+                        <input type="hidden" id="location_lon" name="location_lon" required>
+                        <input type="text" id="location_address" name="location_address" class="form-control" placeholder="Detected Address" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company_password">Password:</label>
+                        <input type="password" id="company_password" name="company_password" class="form-control" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="reenter_company_password">Re-enter Password:</label>
+                        <input type="password" id="reenter_company_password" name="reenter_company_password" class="form-control" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-custom-submit">Sign Up</button>
+                </form>
+                <div class="login-link">
+                    Already have an account? <a href="company_login.html">Login here</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <?php include 'footer.html'; ?>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marker;
+
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lon]).addTo(map)
+                .bindPopup('Selected Location: ' + lat.toFixed(4) + ', ' + lon.toFixed(4))
+                .openPopup();
+
+            document.getElementById('location_lat').value = lat;
+            document.getElementById('location_lon').value = lon;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        document.getElementById('location_address').value = data.display_name;
+                    } else {
+                        document.getElementById('location_address').value = 'Address not found';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during reverse geocoding:', error);
+                    document.getElementById('location_address').value = 'Error fetching address';
+                });
+        });
+    </script>
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+    <script src="./assets/js/owl.carousel.min.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <script src="./assets/js/price_rangs.js"></script>
+    <script src="./assets/js/wow.min.js"></script>
+    <script src="./assets/js/jquery.magnific-popup.js"></script>
+    <script src="./assets/js/jquery.scrollUp.min.js"></script>
+    <script src="./assets/js/jquery.nice-select.min.js"></script>
+    <script src="./assets/js/jquery.sticky.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script src="./assets/js/jquery.counterup.min.js"></script>
+    <script src="./assets/js/contact.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/mail-script.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="./assets/js/plugins.js"></script>
+    <script src="./assets/js/main.js"></script>
+</body>
+</html>
