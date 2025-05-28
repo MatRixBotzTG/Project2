@@ -1,20 +1,48 @@
-<?php
-// php/db_connect.php
+-- Create the database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS jobcrafter;
 
-// Database connection details
-$servername = "localhost"; // Usually 'localhost' for local development
-$username = "root";        // Your MySQL username (e.g., 'root' for XAMPP/WAMP)
-$password = "";            // Your MySQL password (often empty for local XAMPP/WAMP)
-$dbname = "jobcrafter"; // **IMPORTANT: Replace with your actual database name**
+-- Use the newly created database
+USE jobcrafter;
 
-// Create database connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+-- Table for Workers
+CREATE TABLE IF NOT EXISTS workers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT,
+    gender ENUM('Male', 'Female', 'Other') NOT NULL,
+    mobile VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL, -- Hashed password
+    country VARCHAR(100),
+    state VARCHAR(100),
+    status ENUM('active', 'banned') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+-- Table for Companies
+CREATE TABLE IF NOT EXISTS companies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(20) UNIQUE NOT NULL,
+    country VARCHAR(100),
+    state VARCHAR(100),
+    location_lat DECIMAL(10, 8), -- Latitude
+    location_lon DECIMAL(11, 8), -- Longitude
+    location_address TEXT,
+    password VARCHAR(255) NOT NULL, -- Hashed password
+    status ENUM('pending', 'approved', 'banned') DEFAULT 'pending', -- Status for admin approval
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
-// Optional: Set character set to UTF-8 for proper handling of special characters
-$conn->set_charset("utf8mb4");
-?>
+-- Table for Admins (optional, if you want a separate admin table instead of var.php)
+-- CREATE TABLE IF NOT EXISTS admins (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     username VARCHAR(50) UNIQUE NOT NULL,
+--     password VARCHAR(255) NOT NULL, -- Hashed password
+--     email VARCHAR(255) UNIQUE,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+```
